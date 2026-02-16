@@ -1,0 +1,11 @@
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\bin\Debug\net10.0\RulesEngine.Core.deps.json
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\bin\Debug\net10.0\RulesEngine.Core.dll
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\bin\Debug\net10.0\RulesEngine.Core.pdb
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\obj\Debug\net10.0\RulesEngine.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\obj\Debug\net10.0\RulesEngine.Core.AssemblyInfoInputs.cache
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\obj\Debug\net10.0\RulesEngine.Core.AssemblyInfo.cs
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\obj\Debug\net10.0\RulesEngine.Core.csproj.CoreCompileInputs.cache
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\obj\Debug\net10.0\RulesEngine.Core.dll
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\obj\Debug\net10.0\refint\RulesEngine.Core.dll
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\obj\Debug\net10.0\RulesEngine.Core.pdb
+C:\rcdrguez\dev\lightweight-rules-engine\src\RulesEngine.Core\obj\Debug\net10.0\ref\RulesEngine.Core.dll

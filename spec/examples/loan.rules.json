@@ -1,0 +1,27 @@
+{
+  "specVersion": "1.0",
+  "name": "LoanEligibility",
+  "version": "1.0.0",
+  "default": { "decision": "REVIEW" },
+  "rules": [
+    {
+      "id": "R-REJECT-LOW-SCORE",
+      "priority": 200,
+      "when": { "any": [
+        { "<": [ { "var": "score" }, 580 ] },
+        { ">": [ { "var": "fraudSignals" }, 0 ] }
+      ]},
+      "then": { "set": { "decision": "REJECT" }, "addTags": ["HIGH_RISK"] }
+    },
+    {
+      "id": "R-APPROVE-GOOD",
+      "priority": 100,
+      "when": { "all": [
+        { ">=": [ { "var": "age" }, 18 ] },
+        { "<=": [ { "var": "dti" }, 0.35 ] },
+        { ">=": [ { "var": "score" }, 680 ] }
+      ]},
+      "then": { "set": { "decision": "APPROVE" }, "addTags": ["LOW_RISK"] }
+    }
+  ]
+}
