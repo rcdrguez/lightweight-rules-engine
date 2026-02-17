@@ -38,13 +38,20 @@ export default function HomePage() {
     return 'warning';
   }, [result.decision]);
 
+  const matchedRuleIds = Array.isArray(result.matchedRuleIds) ? result.matchedRuleIds : [];
+  const resultTags = Array.isArray(result.tags) ? result.tags : [];
+
   async function runEvaluation() {
     setRunning(true);
     setError(null);
     try {
       const response = await evaluateRuleSet({ ruleSet, facts, explain, strict });
       if (response) {
-        setResult(response);
+        setResult({
+          ...response,
+          matchedRuleIds: Array.isArray(response.matchedRuleIds) ? response.matchedRuleIds : [],
+          tags: Array.isArray(response.tags) ? response.tags : []
+        });
         toast.success('Evaluation complete');
       } else {
         const local = evaluateLocally(ruleSet, facts, explain);
@@ -170,10 +177,10 @@ export default function HomePage() {
                   <Badge variant={decisionVariant} className="text-base">{result.decision}</Badge>
                   <div>
                     <p className="text-xs uppercase tracking-wide text-slate-500">Matched rules</p>
-                    <p className="text-sm text-slate-700">{result.matchedRuleIds.join(', ') || 'None'}</p>
+                    <p className="text-sm text-slate-700">{matchedRuleIds.join(', ') || 'None'}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {result.tags.map((tag) => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                    {resultTags.map((tag) => <Badge key={tag} variant="secondary">{tag}</Badge>)}
                   </div>
                   <Collapsible>
                     <CollapsibleTrigger className="text-sm font-semibold text-slate-700">Why this decision?</CollapsibleTrigger>
