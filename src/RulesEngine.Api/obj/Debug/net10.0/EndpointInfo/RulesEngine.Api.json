@@ -1,0 +1,165 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "RulesEngine.Api",
+    "version": "1.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "RulesEngine.Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/validate": {
+      "post": {
+        "tags": [
+          "RulesEngine.Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RuleSet"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/evaluate": {
+      "post": {
+        "tags": [
+          "RulesEngine.Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluateHttpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EvaluateHttpRequest": {
+        "type": "object",
+        "properties": {
+          "ruleset": {
+            "$ref": "#/components/schemas/RuleSet"
+          },
+          "facts": { },
+          "options": {
+            "$ref": "#/components/schemas/EvaluateOptions"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvaluateOptions": {
+        "type": "object",
+        "properties": {
+          "explain": {
+            "type": "boolean"
+          },
+          "strictMode": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Rule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "when": { },
+          "then": {
+            "$ref": "#/components/schemas/ThenAction"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RuleSet": {
+        "type": "object",
+        "properties": {
+          "specVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "default": {
+            "$ref": "#/components/schemas/ThenAction"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rule"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ThenAction": {
+        "type": "object",
+        "properties": {
+          "set": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "addTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "RulesEngine.Api"
+    }
+  ]
+}

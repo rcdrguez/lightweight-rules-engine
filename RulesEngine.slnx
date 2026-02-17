@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/RulesEngine.Api/RulesEngine.Api.csproj" />
     <Project Path="src/RulesEngine.Core/RulesEngine.Core.csproj" />
   </Folder>
   <Folder Name="/tests/">
