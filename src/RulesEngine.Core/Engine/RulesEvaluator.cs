@@ -19,9 +19,21 @@ public static class RulesEvaluator
     {
         var result = new EvaluateResult();
 
+        if (request is null)
+        {
+            result.Errors.Add(new EngineError { Code = "INVALID_REQUEST", Message = "Request is null." });
+            return result;
+        }
+
         if (request.RuleSet is null)
         {
             result.Errors.Add(new EngineError { Code = "INVALID_REQUEST", Message = "RuleSet is null." });
+            return result;
+        }
+
+        if (request.RuleSet.Rules is null)
+        {
+            result.Errors.Add(new EngineError { Code = "INVALID_RULESET", Message = "Rules collection is null." });
             return result;
         }
 
@@ -32,6 +44,12 @@ public static class RulesEvaluator
 
         foreach (var rule in orderedRules)
         {
+            if (rule is null)
+            {
+                result.Errors.Add(new EngineError { Code = "INVALID_RULE", Message = "Rule entry is null." });
+                continue;
+            }
+
             var trace = new RuleTrace { RuleId = rule.Id };
 
             // Evaluate the "when" expression for this rule.
@@ -75,12 +93,15 @@ public static class RulesEvaluator
     /// <summary>
     /// Applies a ThenAction to the evaluation result.
     /// </summary>
-    private static void ApplyThen(ThenAction then, EvaluateResult result)
+    private static void ApplyThen(ThenAction? then, EvaluateResult result)
     {
-        foreach (var kv in then.Set)
+        if (then is null)
+            return;
+
+        foreach (var kv in then.Set ?? new Dictionary<string, object?>())
             result.Output[kv.Key] = NormalizeSetValue(kv.Value);
 
-        foreach (var tag in then.AddTags)
+        foreach (var tag in then.AddTags ?? new List<string>())
             result.Tags.Add(tag);
     }
 

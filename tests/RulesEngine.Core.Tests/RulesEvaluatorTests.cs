@@ -1,4 +1,5 @@
-﻿using RulesEngine.Core.Engine;
+﻿using System.Text.Json;
+using RulesEngine.Core.Engine;
 using RulesEngine.Core.Models;
 using RulesEngine.Core.Tests.TestHelpers;
 using RulesEngine.Core.Validation;
@@ -66,5 +67,47 @@ public class RulesEvaluatorTests
         Assert.Equal("REJECT", res.Output["decision"]);
         Assert.Contains("HIGH_RISK", res.Tags);
         Assert.NotEmpty(res.Trace);
+    }
+
+    [Fact]
+    public void Should_Not_Throw_When_Then_Collections_Are_Null()
+    {
+        var ruleSet = new RuleSet
+        {
+            Name = "null-safe",
+            Version = "1.0.0",
+            Rules =
+            [
+                new Rule
+                {
+                    Id = "R1",
+                    Priority = 1,
+                    When = JsonDocument.Parse("{ \"==\": [1, 1] }").RootElement,
+                    Then = new ThenAction
+                    {
+                        Set = null!,
+                        AddTags = null!
+                    }
+                }
+            ]
+        };
+
+        using var facts = JsonDocument.Parse("{}");
+        var request = new EvaluateRequest { RuleSet = ruleSet, Facts = facts.RootElement, Options = new EvaluateOptions() };
+
+        var res = RulesEvaluator.Evaluate(request);
+
+        Assert.Empty(res.Errors);
+        Assert.Empty(res.Output);
+        Assert.Empty(res.Tags);
+        Assert.Contains("R1", res.MatchedRules);
+    }
+
+    [Fact]
+    public void Should_Return_Error_When_Request_Is_Null()
+    {
+        var result = RulesEvaluator.Evaluate(null!);
+
+        Assert.Contains(result.Errors, e => e.Code == "INVALID_REQUEST" && e.Message == "Request is null.");
     }
 }
