@@ -1,5 +1,5 @@
-import { ManualRulesPage } from '@/components/rules/manual-rules-page';
+import { ManualRulesEditor } from '@/components/rules/manual-rules-editor';
 
-export default function RulesManualRoute() {
-  return <ManualRulesPage />;
+export default function ManualRulesPage() {
+  return <ManualRulesEditor />;
 }

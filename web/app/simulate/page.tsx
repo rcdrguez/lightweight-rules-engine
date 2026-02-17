@@ -1,5 +1,5 @@
-import { SimulatePage } from '@/components/simulate/simulate-page';
+import { SimulateWorkbench } from '@/components/simulate/simulate-workbench';
 
-export default function SimulateRoute() {
-  return <SimulatePage />;
+export default function SimulatePage() {
+  return <SimulateWorkbench />;
 }

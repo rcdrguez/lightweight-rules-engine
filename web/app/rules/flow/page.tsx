@@ -1,5 +1,5 @@
-import { FlowRulesPage } from '@/components/rules/flow-rules-page';
+import { FlowRulesBuilder } from '@/components/rules/flow-rules-builder';
 
-export default function RulesFlowRoute() {
-  return <FlowRulesPage />;
+export default function FlowRulesPage() {
+  return <FlowRulesBuilder />;
 }
