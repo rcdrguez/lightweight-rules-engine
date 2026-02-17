@@ -23,6 +23,7 @@ export interface Rule {
   conditions: Condition[];
   decision: Decision;
   tags: string[];
+  enabled?: boolean;
 }
 
 export interface RuleSet {
