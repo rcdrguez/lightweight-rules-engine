@@ -34,10 +34,25 @@ export interface RuleSet {
 
 export type Facts = Record<string, string | number | boolean>;
 
+export interface EvaluationLog {
+  level: 'INFO' | 'CHECK' | 'PASS' | 'FAIL' | 'RESULT' | 'WARNING';
+  message: string;
+}
+
+export interface EvaluationStep {
+  ruleId: string;
+  conditionLabel: string;
+  passed: boolean;
+}
+
 export interface EvaluationResult {
   decision: Decision;
   matchedRuleIds: string[];
   tags: string[];
   explanation?: string;
   raw?: unknown;
+  score?: number;
+  winnerRuleId?: string;
+  logs?: EvaluationLog[];
+  steps?: EvaluationStep[];
 }
