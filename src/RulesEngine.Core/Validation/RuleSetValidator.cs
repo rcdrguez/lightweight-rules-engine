@@ -52,10 +52,26 @@ public static class RuleSetValidator
 
         foreach (var rule in ruleSet.Rules)
         {
+            if (rule is null)
+            {
+                errors.Add(new EngineError { Code = "INVALID_RULE", Message = "rule entry is null." });
+                continue;
+            }
+
             if (string.IsNullOrWhiteSpace(rule.Id))
             {
                 errors.Add(new EngineError { Code = "INVALID_RULE", Message = "rule.id is required." });
                 continue;
+            }
+
+            if (rule.Then is null)
+            {
+                errors.Add(new EngineError
+                {
+                    Code = "INVALID_RULE",
+                    Message = "rule.then is required.",
+                    RuleId = rule.Id
+                });
             }
 
             if (!ids.Add(rule.Id))
