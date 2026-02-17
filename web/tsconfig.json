@@ -15,9 +15,30 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@tanstack/react-query": ["./vendor/react-query"],
+      "@xyflow/react": ["./vendor/react-flow"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "components/providers.tsx",
+    "components/rules/**/*.ts",
+    "components/rules/**/*.tsx",
+    "components/simulate/**/*.ts",
+    "components/simulate/**/*.tsx",
+    "components/terminal/**/*.ts",
+    "components/terminal/**/*.tsx",
+    "components/ui/**/*.ts",
+    "components/ui/**/*.tsx",
+    "lib/apiClient.ts",
+    "lib/utils.ts",
+    "store/**/*.ts",
+    "store/**/*.tsx",
+    "types/**/*.ts",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }
