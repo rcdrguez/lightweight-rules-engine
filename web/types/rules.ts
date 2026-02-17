@@ -1,42 +1,50 @@
-export type Decision = 'APPROVE' | 'REJECT' | 'REVIEW';
-export type TemplateType = 'Loan' | 'Fraud' | 'Discount';
+export type RuleAction = 'APPROVE' | 'REJECT' | 'REVIEW';
+export type RuleDecision = RuleAction | 'NO_MATCH';
+export type RuleOperator = '==' | '!=' | '>' | '>=' | '<' | '<=';
 
-export type Operator =
-  | '=='
-  | '!='
-  | '>'
-  | '>='
-  | '<'
-  | '<='
-  | 'includes'
-  | 'not_includes';
-
-export interface Condition {
-  field: string;
-  operator: Operator;
-  value: string | number | boolean;
-}
-
-export interface Rule {
+export interface RuleCondition {
   id: string;
-  priority: number;
-  conditions: Condition[];
-  decision: Decision;
-  tags: string[];
+  variable: string;
+  operator: RuleOperator;
+  value: string | number;
 }
 
-export interface RuleSet {
+export interface EngineRule {
+  id: string;
   name: string;
-  version: string;
-  rules: Rule[];
+  priority: number;
+  enabled: boolean;
+  action: RuleAction;
+  conditions: RuleCondition[];
 }
 
-export type Facts = Record<string, string | number | boolean>;
+export interface EngineExecutionPayload {
+  rules: EngineRule[];
+  input: Record<string, unknown>;
+  options: {
+    explain: boolean;
+    strict: boolean;
+    locale: 'es' | 'en';
+  };
+}
 
-export interface EvaluationResult {
-  decision: Decision;
-  matchedRuleIds: string[];
-  tags: string[];
+export interface EvaluatedRule {
+  ruleId: string;
+  action: RuleAction;
+  priority: number;
+  passed: boolean;
+  order: number;
+}
+
+export interface EngineExecutionResponse {
+  decision: RuleDecision;
+  matchedRule: EngineRule | null;
+  evaluatedRules: EvaluatedRule[];
   explanation?: string;
-  raw?: unknown;
+  logs?: string[];
+}
+
+export interface EngineValidationResult {
+  valid: boolean;
+  errors: Array<{ ruleId?: string; message: string }>;
 }
