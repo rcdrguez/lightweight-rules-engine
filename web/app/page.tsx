@@ -20,6 +20,79 @@ import { toast } from 'sonner';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
+const copy = {
+  en: {
+    subtitle: 'Build decision policies visually. Explain decisions. Share scenarios.',
+    run: 'Run',
+    validate: 'Validate',
+    share: 'Share',
+    builder: 'Builder',
+    simple: 'Simple',
+    advanced: 'Advanced',
+    explain: 'Explain',
+    strict: 'Strict',
+    langLabel: 'Language',
+    playground: 'Playground',
+    docs: 'Docs',
+    about: 'About',
+    tryFast: 'Try it in 10 seconds',
+    tryFastSteps: '1) Load demo facts 2) Press Run 3) Expand “Why this decision?” to explain the result to stakeholders.',
+    runDemo: 'Run Demo',
+    factsTitle: 'Facts',
+    factsHelper: 'Use the guided facts builder or load defaults for a quick scenario.',
+    loadFacts: 'Load example facts',
+    jsonPreview: 'JSON preview',
+    output: 'Results (easy view)',
+    decision: 'Decision',
+    matchedRules: 'Matched rules',
+    matchedRulesHelp: 'Shows which rules were triggered with the current facts.',
+    tags: 'Tags',
+    tagsHelp: 'Quick labels to identify the outcome type.',
+    whyDecision: 'Why this decision?',
+    whyDecisionHelp: 'Human explanation generated from the rules and facts.',
+    rawJson: 'Raw JSON (advanced)',
+    none: 'None',
+    explainHint: 'Enable Explain to generate a decision narrative.',
+    docsBody: 'Use /validate to verify rule integrity, /evaluate for runtime decisions, and /health for service health.',
+    aboutBody: 'A polished demo interface for business-friendly decision policy authoring.'
+  },
+  es: {
+    subtitle: 'Crea políticas de decisión visualmente. Explica decisiones. Comparte escenarios.',
+    run: 'Ejecutar',
+    validate: 'Validar',
+    share: 'Compartir',
+    builder: 'Constructor',
+    simple: 'Simple',
+    advanced: 'Avanzado',
+    explain: 'Explicar',
+    strict: 'Estricto',
+    langLabel: 'Idioma',
+    playground: 'Pruebas',
+    docs: 'Documentación',
+    about: 'Acerca de',
+    tryFast: 'Pruébalo en 10 segundos',
+    tryFastSteps: '1) Carga datos demo 2) Presiona Ejecutar 3) Abre “¿Por qué esta decisión?” para explicar el resultado.',
+    runDemo: 'Ejecutar demo',
+    factsTitle: 'Datos (Facts)',
+    factsHelper: 'Usa el editor guiado o carga datos por defecto para una prueba rápida.',
+    loadFacts: 'Cargar datos de ejemplo',
+    jsonPreview: 'Vista previa JSON',
+    output: 'Resultados (vista fácil)',
+    decision: 'Decisión',
+    matchedRules: 'Reglas aplicadas',
+    matchedRulesHelp: 'Muestra qué reglas se activaron con los datos actuales.',
+    tags: 'Etiquetas',
+    tagsHelp: 'Etiquetas rápidas para identificar el tipo de resultado.',
+    whyDecision: '¿Por qué esta decisión?',
+    whyDecisionHelp: 'Explicación en lenguaje humano basada en reglas y datos.',
+    rawJson: 'JSON crudo (avanzado)',
+    none: 'Ninguna',
+    explainHint: 'Activa Explicar para generar una narrativa de decisión.',
+    docsBody: 'Usa /validate para verificar reglas, /evaluate para decisiones en ejecución y /health para estado del servicio.',
+    aboutBody: 'Una interfaz pulida para crear políticas de decisión fáciles para negocio.'
+  }
+} as const;
+
 export default function HomePage() {
   // Architecture decision: keep API + local evaluator in one page container for demo speed and a predictable state model.
   const [mode, setMode] = useState<'simple' | 'advanced'>('simple');
@@ -31,6 +104,8 @@ export default function HomePage() {
   const [builderOpen, setBuilderOpen] = useState(false);
   const [result, setResult] = useState(() => evaluateLocally(defaultRuleSet, defaultFacts, true));
   const [error, setError] = useState<string | null>(null);
+  const [language, setLanguage] = useState<'en' | 'es'>('es');
+  const t = copy[language];
 
   const decisionVariant = useMemo(() => {
     if (result.decision === 'APPROVE') return 'success';
@@ -87,38 +162,49 @@ export default function HomePage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <h1 className="text-2xl font-semibold md:text-3xl">Lightweight Rules Engine</h1>
-            <p className="mt-1 text-slate-600">Build decision policies visually. Explain decisions. Share scenarios.</p>
+            <p className="mt-1 text-slate-600">{t.subtitle}</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button onClick={runEvaluation} disabled={running}><Play className="mr-2 h-4 w-4" />Run</Button>
-            <Button variant="secondary" onClick={runValidation}><CheckCircle2 className="mr-2 h-4 w-4" />Validate</Button>
-            <Button variant="outline"><Share2 className="mr-2 h-4 w-4" />Share</Button>
-            <Button variant="outline" onClick={() => setBuilderOpen(true)}><FlaskConical className="mr-2 h-4 w-4" />Builder</Button>
+            <Button onClick={runEvaluation} disabled={running}><Play className="mr-2 h-4 w-4" />{t.run}</Button>
+            <Button variant="secondary" onClick={runValidation}><CheckCircle2 className="mr-2 h-4 w-4" />{t.validate}</Button>
+            <Button variant="outline"><Share2 className="mr-2 h-4 w-4" />{t.share}</Button>
+            <Button variant="outline" onClick={() => setBuilderOpen(true)}><FlaskConical className="mr-2 h-4 w-4" />{t.builder}</Button>
           </div>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-6 text-sm">
-          <label className="flex items-center gap-2">Simple <Switch checked={mode === 'advanced'} onCheckedChange={(checked) => setMode(checked ? 'advanced' : 'simple')} /> Advanced</label>
-          <label className="flex items-center gap-2">Explain <Switch checked={explain} onCheckedChange={setExplain} /></label>
-          <label className="flex items-center gap-2">Strict <Switch checked={strict} onCheckedChange={setStrict} /></label>
+          <label className="flex items-center gap-2">{t.simple} <Switch checked={mode === 'advanced'} onCheckedChange={(checked) => setMode(checked ? 'advanced' : 'simple')} /> {t.advanced}</label>
+          <label className="flex items-center gap-2">{t.explain} <Switch checked={explain} onCheckedChange={setExplain} /></label>
+          <label className="flex items-center gap-2">{t.strict} <Switch checked={strict} onCheckedChange={setStrict} /></label>
+          <label className="flex items-center gap-2">
+            {t.langLabel}
+            <select
+              className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm"
+              value={language}
+              onChange={(event) => setLanguage(event.target.value as 'en' | 'es')}
+            >
+              <option value="es">Español</option>
+              <option value="en">English</option>
+            </select>
+          </label>
         </div>
       </header>
 
       <Tabs defaultValue="playground">
         <TabsList>
-          <TabsTrigger value="playground">Playground</TabsTrigger>
-          <TabsTrigger value="docs">Docs</TabsTrigger>
-          <TabsTrigger value="about">About</TabsTrigger>
+          <TabsTrigger value="playground">{t.playground}</TabsTrigger>
+          <TabsTrigger value="docs">{t.docs}</TabsTrigger>
+          <TabsTrigger value="about">{t.about}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="playground" className="mt-4 space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Try it in 10 seconds</CardTitle>
+              <CardTitle>{t.tryFast}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <p className="text-sm text-slate-600">1) Load demo facts 2) Press Run 3) Expand “Why this decision?” to explain the result to stakeholders.</p>
-              <Button variant="secondary" onClick={() => { setFacts(defaultFacts); void runEvaluation(); }}>Run Demo</Button>
+              <p className="text-sm text-slate-600">{t.tryFastSteps}</p>
+              <Button variant="secondary" onClick={() => { setFacts(defaultFacts); void runEvaluation(); }}>{t.runDemo}</Button>
             </CardContent>
           </Card>
 
@@ -150,14 +236,14 @@ export default function HomePage() {
 
             <div className="space-y-4">
               <Card>
-                <CardHeader><CardTitle>Facts</CardTitle></CardHeader>
+                <CardHeader><CardTitle>{t.factsTitle}</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
                   {mode === 'simple' ? (
                     <>
-                      <p className="text-sm text-slate-600">Use the guided facts builder or load defaults for a quick scenario.</p>
-                      <Button variant="secondary" onClick={() => setFacts(defaultFacts)}>Load example facts</Button>
+                      <p className="text-sm text-slate-600">{t.factsHelper}</p>
+                      <Button variant="secondary" onClick={() => setFacts(defaultFacts)}>{t.loadFacts}</Button>
                       <Collapsible>
-                        <CollapsibleTrigger className="text-sm font-medium text-slate-700">JSON preview</CollapsibleTrigger>
+                        <CollapsibleTrigger className="text-sm font-medium text-slate-700">{t.jsonPreview}</CollapsibleTrigger>
                         <CollapsibleContent>
                           <pre className="mt-2 overflow-auto rounded-xl bg-slate-900 p-3 text-xs text-slate-100">{JSON.stringify(facts, null, 2)}</pre>
                         </CollapsibleContent>
@@ -172,23 +258,29 @@ export default function HomePage() {
               </Card>
 
               <Card>
-                <CardHeader><CardTitle>Output</CardTitle></CardHeader>
+                <CardHeader><CardTitle>{t.output}</CardTitle></CardHeader>
                 <CardContent className="space-y-4">
-                  <Badge variant={decisionVariant} className="text-base">{result.decision}</Badge>
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-slate-500">Matched rules</p>
-                    <p className="text-sm text-slate-700">{matchedRuleIds.join(', ') || 'None'}</p>
+                  <div className="space-y-1">
+                    <p className="text-xs uppercase tracking-wide text-slate-500">{t.decision}</p>
+                    <Badge variant={decisionVariant} className="text-base">{result.decision}</Badge>
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div>
+                    <p className="flex items-center gap-1 text-xs uppercase tracking-wide text-slate-500">{t.matchedRules} <Info className="h-3.5 w-3.5" title={t.matchedRulesHelp} /></p>
+                    <p className="text-sm text-slate-700">{matchedRuleIds.join(', ') || t.none}</p>
+                  </div>
+                  <div>
+                    <p className="mb-2 flex items-center gap-1 text-xs uppercase tracking-wide text-slate-500">{t.tags} <Info className="h-3.5 w-3.5" title={t.tagsHelp} /></p>
+                    <div className="flex flex-wrap gap-2">
                     {resultTags.map((tag) => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                    </div>
                   </div>
                   <Collapsible>
-                    <CollapsibleTrigger className="text-sm font-semibold text-slate-700">Why this decision?</CollapsibleTrigger>
-                    <CollapsibleContent className="pt-2 text-sm text-slate-600">{result.explanation ?? 'Enable Explain to generate a decision narrative.'}</CollapsibleContent>
+                    <CollapsibleTrigger className="flex items-center gap-1 text-sm font-semibold text-slate-700">{t.whyDecision} <Info className="h-3.5 w-3.5" title={t.whyDecisionHelp} /></CollapsibleTrigger>
+                    <CollapsibleContent className="pt-2 text-sm text-slate-600">{result.explanation ?? t.explainHint}</CollapsibleContent>
                   </Collapsible>
                   <Separator />
                   <Collapsible>
-                    <CollapsibleTrigger className="text-sm text-slate-700">Raw JSON</CollapsibleTrigger>
+                    <CollapsibleTrigger className="text-sm text-slate-700">{t.rawJson}</CollapsibleTrigger>
                     <CollapsibleContent>
                       <pre className="mt-2 overflow-auto rounded-xl bg-slate-900 p-3 text-xs text-slate-100">{JSON.stringify(result.raw, null, 2)}</pre>
                     </CollapsibleContent>
@@ -201,17 +293,17 @@ export default function HomePage() {
         </TabsContent>
 
         <TabsContent value="docs" className="mt-4">
-          <Card><CardContent className="pt-5 text-sm text-slate-600">Use /validate to verify rule integrity, /evaluate for runtime decisions, and /health for service health.</CardContent></Card>
+          <Card><CardContent className="pt-5 text-sm text-slate-600">{t.docsBody}</CardContent></Card>
         </TabsContent>
         <TabsContent value="about" className="mt-4">
-          <Card><CardContent className="pt-5 text-sm text-slate-600">A polished demo interface for business-friendly decision policy authoring.</CardContent></Card>
+          <Card><CardContent className="pt-5 text-sm text-slate-600">{t.aboutBody}</CardContent></Card>
         </TabsContent>
       </Tabs>
 
       <div className="sticky bottom-0 z-30 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-soft md:hidden">
         <div className="flex gap-2">
-          <Button className="flex-1" onClick={runEvaluation}>Run</Button>
-          <Button className="flex-1" variant="secondary" onClick={() => setBuilderOpen(true)}>Builder</Button>
+          <Button className="flex-1" onClick={runEvaluation}>{t.run}</Button>
+          <Button className="flex-1" variant="secondary" onClick={() => setBuilderOpen(true)}>{t.builder}</Button>
         </div>
       </div>
 
