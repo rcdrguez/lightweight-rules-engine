@@ -2,14 +2,14 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
-import { RulesStoreProvider } from '@/store/useRulesStore';
+import { AppStateProvider } from '@/store/useAppState';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RulesStoreProvider>{children}</RulesStoreProvider>
+      <AppStateProvider>{children}</AppStateProvider>
     </QueryClientProvider>
   );
 }
